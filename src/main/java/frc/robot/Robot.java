@@ -56,11 +56,14 @@ public class Robot extends TimedRobot {
      * Configure the closed loop controller. We want to make sure we set the
      * feedback sensor as the primary encoder.
      */
+    double p = SmartDashboard.getNumber("p", .01);
     motorConfig.closedLoop
+
+        
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control. We don't need to pass a closed loop
         // slot, as it will default to slot 0.
-        .p(0.05 )
+        .p( p )
         .i(0)
         .d(0)
         .outputRange(-1, 1)
@@ -88,6 +91,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.setDefaultNumber("Target Velocity", 0);
     SmartDashboard.setDefaultBoolean("Control Mode", false);
     SmartDashboard.setDefaultBoolean("Reset Encoder", false);
+    SmartDashboard.setDefaultNumber("P", .01);
   }
 
   @Override
@@ -123,7 +127,7 @@ public class Robot extends TimedRobot {
     // Display encoder position and velocity
     SmartDashboard.putNumber("Actual Position", encoder.getPosition());
     SmartDashboard.putNumber("Actual Velocity", encoder.getVelocity());
-
+    SmartDashboard.putNumber("Rotation", encoder.getPosition());
     if (SmartDashboard.getBoolean("Reset Encoder", false)) {
       SmartDashboard.putBoolean("Reset Encoder", false);
       // Reset the encoder position to 0
