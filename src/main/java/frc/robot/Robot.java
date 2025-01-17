@@ -51,9 +51,7 @@ public class Robot extends TimedRobot {
      * needed, we can adjust values like the position or velocity conversion
      * factors.
      */
-    motorConfig.encoder
-        .positionConversionFactor(1)
-        .velocityConversionFactor(1);
+    motorConfig.encoder.positionConversionFactor(1);
 
     /*
      * Configure the closed loop controller. We want to make sure we set the
@@ -73,7 +71,7 @@ public class Robot extends TimedRobot {
         .outputRange(-1, 1)
         // Set PID values for velocity control in slot 1
         
-        .velocityFF(1.0 / 5767, ClosedLoopSlot.kSlot1)
+        
         .outputRange(-1, 1, ClosedLoopSlot.kSlot1);
 
     /*
@@ -90,8 +88,6 @@ public class Robot extends TimedRobot {
 
     // Initialize dashboard values
     SmartDashboard.setDefaultNumber("Target Position", 0);
-    SmartDashboard.setDefaultNumber("Target Velocity", 0);
-    SmartDashboard.setDefaultBoolean("Control Mode", false);
     SmartDashboard.setDefaultBoolean("Reset Encoder", false);
     SmartDashboard.setDefaultNumber("P", .01);
     SmartDashboard.setDefaultNumber("d", .01);
@@ -100,21 +96,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    if (SmartDashboard.getBoolean("Control Mode", false)) {
-      /*
-       * Get the target velocity from SmartDashboard and set it as the setpoint
-       * for the closed loop controller.
-       */
-      double targetVelocity = SmartDashboard.getNumber("Target Velocity", 0);
-      closedLoopController.setReference(targetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
-    } else {
+    
       /*
        * Get the target position from SmartDashboard and set it as the setpoint
        * for the closed loop controller.
        */
       double targetPosition = SmartDashboard.getNumber("Target Position", 0);
       closedLoopController.setReference(targetPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-    }
+    
   }
   
   @Override
@@ -129,6 +118,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     // Display encoder position and velocity
+    motorConfig.closedLoop.p( SmartDashboard.getNumber("P", 0));
     SmartDashboard.putNumber("Actual Position", encoder.getPosition());
     SmartDashboard.putNumber("Actual Velocity", encoder.getVelocity());
     if (SmartDashboard.getBoolean("Reset Encoder", false)) {
