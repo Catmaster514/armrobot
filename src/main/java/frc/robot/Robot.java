@@ -10,6 +10,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Degrees;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -57,6 +60,7 @@ public class Robot extends TimedRobot {
      * feedback sensor as the primary encoder.
      */
     double p = SmartDashboard.getNumber("p", .01);
+    double d = SmartDashboard.getNumber("d", .01);
     motorConfig.closedLoop
 
         
@@ -65,12 +69,10 @@ public class Robot extends TimedRobot {
         // slot, as it will default to slot 0.
         .p( p )
         .i(0)
-        .d(0)
+        .d(d)
         .outputRange(-1, 1)
         // Set PID values for velocity control in slot 1
-        .p(0.0001, ClosedLoopSlot.kSlot1)
-        .i(0, ClosedLoopSlot.kSlot1)
-        .d(0, ClosedLoopSlot.kSlot1)
+        
         .velocityFF(1.0 / 5767, ClosedLoopSlot.kSlot1)
         .outputRange(-1, 1, ClosedLoopSlot.kSlot1);
 
@@ -92,6 +94,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.setDefaultBoolean("Control Mode", false);
     SmartDashboard.setDefaultBoolean("Reset Encoder", false);
     SmartDashboard.setDefaultNumber("P", .01);
+    SmartDashboard.setDefaultNumber("d", .01);
+
   }
 
   @Override
@@ -127,7 +131,6 @@ public class Robot extends TimedRobot {
     // Display encoder position and velocity
     SmartDashboard.putNumber("Actual Position", encoder.getPosition());
     SmartDashboard.putNumber("Actual Velocity", encoder.getVelocity());
-    SmartDashboard.putNumber("Rotation", encoder.getPosition());
     if (SmartDashboard.getBoolean("Reset Encoder", false)) {
       SmartDashboard.putBoolean("Reset Encoder", false);
       // Reset the encoder position to 0
