@@ -65,9 +65,7 @@ public class Robot extends TimedRobot {
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control. We don't need to pass a closed loop
         // slot, as it will default to slot 0.
-        .p( p )
-        .i(0)
-        .d(d)
+        .pidf(SmartDashboard.getNumber("P",.1 ), 0, 0, SmartDashboard.getNumber("feedForward", 0))
         .outputRange(-1, 1)
         // Set PID values for velocity control in slot 1
         
@@ -91,6 +89,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.setDefaultBoolean("Reset Encoder", false);
     SmartDashboard.setDefaultNumber("P", .01);
     SmartDashboard.setDefaultNumber("d", .01);
+    SmartDashboard.setDefaultNumber("feedForward", 0);
 
   }
 
@@ -118,7 +117,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     // Display encoder position and velocity
-    motorConfig.closedLoop.p( SmartDashboard.getNumber("P", 0));
+    motorConfig.closedLoop.pidf(SmartDashboard.getNumber("P",.1 ), 0, 0, SmartDashboard.getNumber("feedForward", 0));
+
     SmartDashboard.putNumber("Actual Position", encoder.getPosition());
     SmartDashboard.putNumber("Actual Velocity", encoder.getVelocity());
     if (SmartDashboard.getBoolean("Reset Encoder", false)) {
