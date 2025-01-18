@@ -90,7 +90,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.setDefaultNumber("P", .01);
     SmartDashboard.setDefaultNumber("d", .01);
     SmartDashboard.setDefaultNumber("feedForward", 0);
-
+    SmartDashboard.setDefaultNumber("degrees", 0);
+    SmartDashboard.setDefaultNumber("targetRotation", 0);
   } 
 
   @Override
@@ -100,7 +101,7 @@ public class Robot extends TimedRobot {
        * Get the target position from SmartDashboard and set it as the setpoint
        * for the closed loop controller.
        */
-      double targetPosition = SmartDashboard.getNumber("Target Position", 0);
+      double targetPosition = SmartDashboard.getNumber("targetRotation", 0) /5.;
       closedLoopController.setReference(targetPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0);
     
   }
@@ -121,8 +122,8 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Actual Position", encoder.getPosition());
     
-  
-    SmartDashboard.putNumber("Actual Velocity", encoder.getVelocity());
+    SmartDashboard.putNumber("degrees", SmartDashboard.getNumber("Actual Position", 0) * 5.625);
+    SmartDashboard.putNumber("Actual Velocity",  encoder.getVelocity());
     if (SmartDashboard.getBoolean("Reset Encoder", false)) {
       SmartDashboard.putBoolean("Reset Encoder", false);
       // Reset the encoder position to 0
