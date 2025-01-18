@@ -91,7 +91,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.setDefaultNumber("d", .01);
     SmartDashboard.setDefaultNumber("feedForward", 0);
 
-  }
+  } 
 
   @Override
   public void teleopPeriodic() {
@@ -120,6 +120,8 @@ public class Robot extends TimedRobot {
     motorConfig.closedLoop.pidf(SmartDashboard.getNumber("P",.1 ), 0, 0, SmartDashboard.getNumber("feedForward", 0));
 
     SmartDashboard.putNumber("Actual Position", encoder.getPosition());
+    
+  
     SmartDashboard.putNumber("Actual Velocity", encoder.getVelocity());
     if (SmartDashboard.getBoolean("Reset Encoder", false)) {
       SmartDashboard.putBoolean("Reset Encoder", false);
